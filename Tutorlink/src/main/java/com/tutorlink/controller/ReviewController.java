@@ -46,7 +46,7 @@ public class ReviewController {
         model.addAttribute("review", review);
         model.addAttribute("reviewId", reviewId);
         model.addAttribute("tutorId", tutorId);
-        return "review/edit-review";
+        return "review/edit-review.jsp";
     }
     @PostMapping("/edit/{reviewId}")
     public String updateReview(@PathVariable int reviewId,
