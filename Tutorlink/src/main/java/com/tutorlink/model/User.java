@@ -1,3 +1,5 @@
+package com.tutorlink.model;
+
 import jakarta.persistence.*;
 
 // User base class - parent class for Student, Tutor and Admin
