@@ -48,7 +48,6 @@
         </a>
     </nav>
 
-
     <div class="sb-user-section">
         <div class="sb-user-avatar">A</div>
         <div>
@@ -59,7 +58,7 @@
     <a href="${pageContext.request.contextPath}/logout" class="sb-logout">
         <i class="fas fa-sign-out-alt"></i><span>Logout</span>
     </a>
-</div></div>
+</div>
 
 <div class="main-content">
 
@@ -69,7 +68,8 @@
             <p class="page-sub">System overview and analytics.</p>
         </div>
     </div>
-<div class="stat-grid">
+
+    <div class="stat-grid">
         <div class="stat-card c-blue">
             <div class="stat-icon blue"><i class="fas fa-user-graduate"></i></div>
             <div class="stat-num counter" data-target="${studentCount}">0</div>
@@ -120,8 +120,9 @@
         <c:if test="${r.reviewType == 'PUBLIC'}">   <c:set var="cntPublic"   value="${cntPublic   + 1}"/></c:if>
         <c:if test="${r.reviewType == 'REPORTED'}"> <c:set var="cntReported" value="${cntReported + 1}"/></c:if>
     </c:forEach>
-<div class="row g-4 mb-4">
-<div class="col-lg-7">
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-7">
             <div class="card h-100">
                 <div class="card-header-title">
                     <i class="fas fa-chart-bar" style="color:#3b82f6;"></i> Booking Pipeline Health
@@ -142,7 +143,6 @@
                                     data-completed="${cntCompleted}"
                                     data-cancelled="${cntCancelled}"></canvas>
                         </div>
-                        <%-- Legend: 2x2 grid --%>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
                             <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(245,158,11,0.08);border-radius:10px;border-left:3px solid #f59e0b;">
                                 <div style="display:flex;align-items:center;gap:8px;">
@@ -177,7 +177,8 @@
                 </c:choose>
             </div>
         </div>
-<div class="col-lg-5">
+
+        <div class="col-lg-5">
             <div class="card h-100">
                 <div class="card-header-title">
                     <i class="fas fa-chart-pie" style="color:#8b5cf6;"></i> Review Health
@@ -202,7 +203,6 @@
                                 </div>
                             </div>
                         </div>
-                        <%-- Legend --%>
                         <div style="display:flex;flex-direction:column;gap:0.5rem;">
                             <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(16,185,129,0.08);border-radius:10px;border-left:3px solid #10b981;">
                                 <div style="display:flex;align-items:center;gap:10px;">
@@ -229,9 +229,9 @@
                 </c:choose>
             </div>
         </div>
-
     </div>
-<div class="table-wrap">
+
+    <div class="table-wrap">
         <div class="table-header">
             <div class="table-title"><i class="fas fa-clock me-2" style="color:var(--accent-gold)"></i>Recent Bookings</div>
             <a href="${pageContext.request.contextPath}/admin/bookings" class="table-count">View All &rarr;</a>
@@ -275,6 +275,34 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<%-- ✅ FIX: Counter animation script that was missing --%>
+<script>
+    (function() {
+        function animateCounter(el) {
+            var target = parseInt(el.getAttribute('data-target')) || 0;
+            if (target === 0) { el.textContent = '0'; return; }
+            var duration = 1200;
+            var start = null;
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                var progress = Math.min((timestamp - start) / duration, 1);
+                var ease = 1 - Math.pow(1 - progress, 4);
+                el.textContent = Math.floor(ease * target);
+                if (progress < 1) requestAnimationFrame(step);
+                else el.textContent = target;
+            }
+            requestAnimationFrame(step);
+        }
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                if (e.isIntersecting) { animateCounter(e.target); observer.unobserve(e.target); }
+            });
+        }, { threshold: 0.3 });
+        document.querySelectorAll('.counter').forEach(function(el) { observer.observe(el); });
+    })();
+</script>
+
 <script>
     (function () {
         var tooltipStyle = {
@@ -290,7 +318,6 @@
             displayColors: true,
             boxWidth: 10, boxHeight: 10, boxPadding: 4,
         };
-
 
         var statusEl = document.getElementById('bookingStatusChart');
         if (statusEl) {
@@ -358,7 +385,6 @@
             });
         }
 
-
         var reviewEl = document.getElementById('reviewTypeChart');
         if (reviewEl) {
             var d2 = reviewEl.dataset;
@@ -403,5 +429,6 @@
         }
 
     })();
-</script></body>
+</script>
+</body>
 </html>
